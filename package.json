@@ -1,0 +1,32 @@
+{
+  "name": "hacker-news-graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/alexpermyakov/hacker-news-graphql.git",
+  "author": "Alex Permyakov <alex.permyakoff@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "netlify-lambda serve src/lambda",
+    "build": "netlify-lambda build src/lambda",
+    "start": "npm run build"
+  },
+  "dependencies": {
+    "apollo-server-lambda": "^2.10.1",
+    "body-parser": "^1.19.0",
+    "bufferutil": "^4.0.1",
+    "compression": "^1.7.4",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.6.0",
+    "graphql-type-json": "^0.3.1",
+    "netlify-lambda": "^1.6.3",
+    "request": "^2.88.2",
+    "utf-8-validate": "^5.0.2"
+  },
+  "devDependencies": {
+    "@babel/polyfill": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/aws-lambda": "^8.10.44",
+    "@types/graphql-type-json": "^0.3.2",
+    "@types/node": "^13.7.6"
+  }
+}
