@@ -7,17 +7,23 @@ const typeDefs = gql`
     id: ID!
     type: String!
     by: String!
-    time: Int!
+    time: String!
     title: String!
-    text: String!
-    parent: ID!
-    url: String!
+    text: String
+    url: String
     score: Int!
-    descendants: Int!
+    numberOfComments: Int!
+    logo: String
+  }
+
+  type TopNewsConnection {
+    cursor: Int
+    hasMore: Boolean!
+    data: [News]!
   }
 
   type Query {
-    topNews: [News]
+    topNews(pageSize: Int, cursor: Int): TopNewsConnection!
   }
 `;
 
