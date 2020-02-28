@@ -3,6 +3,16 @@ import { gql } from 'apollo-server-lambda';
 const typeDefs = gql`
   scalar JSON
 
+  type Comment {
+    id: ID!
+    by: String!
+    score: Int!
+    time: String!
+    text: String!
+    parent: ID!
+    comments: [Comment!]
+  }
+
   type News {
     id: ID!
     type: String!
@@ -14,16 +24,17 @@ const typeDefs = gql`
     score: Int!
     numberOfComments: Int!
     logo: String
+    comments: [Comment!]
   }
 
-  type TopNewsConnection {
+  type TopStoriesConnection {
     cursor: Int
     hasMore: Boolean!
     data: [News]!
   }
 
   type Query {
-    topNews(pageSize: Int, cursor: Int): TopNewsConnection!
+    topStories(pageSize: Int, cursor: Int): TopStoriesConnection!
   }
 `;
 

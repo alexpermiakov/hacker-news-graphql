@@ -3,11 +3,12 @@ import { ApolloServer } from 'apollo-server-lambda';
 import GraphQLJSON from 'graphql-type-json';
 import { Context, Callback, APIGatewayProxyEvent } from 'aws-lambda';
 import typeDefs from '../schema';
-import { topNews } from '../resolvers';
+import { topStories } from '../resolvers';
+import StoryAPI from '../dataSources/StoryAPI';
 
 const resolvers = {
   Query: {
-    topNews,
+    topStories,
   },
   JSON: GraphQLJSON,
 };
@@ -17,6 +18,9 @@ const server = new ApolloServer({
   resolvers,
   introspection: true,
   playground: true,
+  dataSources: () => ({
+    storyAPI: new StoryAPI(),
+  }),
 });
 
 const handler = (

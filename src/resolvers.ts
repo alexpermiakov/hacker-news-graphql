@@ -1,17 +1,6 @@
 import axios from 'axios';
 import { getPublishedDate, getOffsetByCursor } from './utils';
-
-const topStoriesURL = `https://hacker-news.firebaseio.com/v0/topstories.json`;
-
-const getItemURL = storyId =>
-  `https://hacker-news.firebaseio.com/v0/item/${storyId}.json`;
-
-const getStories = async storyIds => {
-  const stories = storyIds.map(storyId => axios.get(getItemURL(storyId)));
-  const res = await Promise.all(stories);
-
-  return res.map(it => (it as any).data);
-};
+import { BASE_URL } from './dataSources/StoryAPI';
 
 type topNewsReturnType = Promise<{
   data: any[];
@@ -19,14 +8,16 @@ type topNewsReturnType = Promise<{
   cursor: number;
 }>;
 
-export const topNews = async (
+export const topStories = async (
   _,
   { cursor, pageSize = 20 },
+  { dataSources: { storyAPI } },
 ): topNewsReturnType => {
-  const { data: items } = await axios.get(topStoriesURL);
-
+  const url = `${BASE_URL}/topstories.json`;
+  const { data: items } = await axios.get(url);
   const offset = getOffsetByCursor(items, cursor);
-  const res = await getStories(items.slice(offset, offset + pageSize));
+  const ids = items.slice(offset, offset + pageSize);
+  const res = await storyAPI.getByIds(ids);
   const hasMore = res.length > 0;
 
   const data = res.map(item => ({
