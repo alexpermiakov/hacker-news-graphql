@@ -12,7 +12,7 @@ class StoryAPI extends RESTDataSource {
     return await this.get(`/item/${id}.json`);
   }
 
-  async getByIds(ids: [number]) {
+  async getItemsByIds(ids: [number]) {
     return Promise.all(ids.map(id => this.getById(id)));
   }
 }

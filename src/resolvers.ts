@@ -8,28 +8,44 @@ type topNewsReturnType = Promise<{
   cursor: number;
 }>;
 
+const formatStory = story => ({
+  ...story,
+  time: getPublishedDate(story.time),
+  numberOfComments: (story.kids || []).length,
+  logo: story.url
+    ? 'https://s2.googleusercontent.com/s2/favicons?domain_url=' + story.url
+    : '',
+});
+
+const loadComments = async (storyAPI, stories) => {
+  const idsArray = stories.map(story => (story.kids || []).slice(0, 5));
+  const idsPromises = idsArray.map(ids => storyAPI.getItemsByIds(ids));
+  const commentsArray: any[] = await Promise.all(idsPromises);
+
+  for (const [index, story] of stories.entries()) {
+    story.comments = commentsArray[index].filter(comment => comment.by);
+  }
+};
+
 export const topStories = async (
   _,
-  { cursor, pageSize = 20 },
+  { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
 ): topNewsReturnType => {
   const url = `${BASE_URL}/topstories.json`;
   const { data: items } = await axios.get(url);
   const offset = getOffsetByCursor(items, cursor);
   const ids = items.slice(offset, offset + pageSize);
-  const res = await storyAPI.getByIds(ids);
-  const hasMore = res.length > 0;
+  const stories = await storyAPI.getItemsByIds(ids);
+  const hasMore = stories.length > 0;
 
-  const data = res.map(item => ({
-    ...item,
-    time: getPublishedDate(item.time),
-    numberOfComments: (item.kids || []).length,
-    logo: 'https://s2.googleusercontent.com/s2/favicons?domain_url=' + item.url,
-  }));
+  const formattedStories = stories.map(formatStory);
+
+  await loadComments(storyAPI, formattedStories);
 
   return {
-    cursor: hasMore ? res[res.length - 1].id : null,
+    cursor: hasMore ? stories[stories.length - 1].id : null,
     hasMore,
-    data,
+    data: formattedStories,
   };
 };
