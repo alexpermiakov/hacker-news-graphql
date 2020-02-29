@@ -13,7 +13,7 @@ const typeDefs = gql`
     comments: [Comment!]
   }
 
-  type News {
+  type Story {
     id: ID!
     type: String!
     by: String!
@@ -22,6 +22,7 @@ const typeDefs = gql`
     text: String
     url: String
     score: Int!
+    domain: String
     numberOfComments: Int!
     logo: String
     comments: [Comment!]
@@ -30,7 +31,7 @@ const typeDefs = gql`
   type TopStoriesConnection {
     cursor: Int
     hasMore: Boolean!
-    data: [News]!
+    data: [Story]!
   }
 
   type Query {

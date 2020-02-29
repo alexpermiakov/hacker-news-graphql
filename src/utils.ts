@@ -16,3 +16,8 @@ export const getPublishedDate = unixTime => {
 
 export const getOffsetByCursor = (items: number[], cursor?: number) =>
   items.findIndex(it => it === cursor) + 1;
+
+export const extractDomain = (url = '') => {
+  let domain = url.includes('//') ? url.split('//')[1] : url;
+  return domain.split('/')[0];
+};

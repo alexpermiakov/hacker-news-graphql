@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getPublishedDate, getOffsetByCursor } from './utils';
+import { getPublishedDate, getOffsetByCursor, extractDomain } from './utils';
 import { BASE_URL } from './dataSources/StoryAPI';
 
 type topNewsReturnType = Promise<{
@@ -13,8 +13,9 @@ const formatStory = story => ({
   time: getPublishedDate(story.time),
   numberOfComments: (story.kids || []).length,
   logo: story.url
-    ? 'https://s2.googleusercontent.com/s2/favicons?domain_url=' + story.url
+    ? `https://api.faviconkit.com/${extractDomain(story.url)}/144`
     : '',
+  domain: extractDomain(story.url),
 });
 
 const loadComments = async (storyAPI, stories) => {
