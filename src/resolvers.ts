@@ -12,10 +12,9 @@ const formatStory = story => ({
   ...story,
   time: getPublishedDate(story.time),
   numberOfComments: (story.kids || []).length,
-  logo: story.url
-    ? `https://api.faviconkit.com/${extractDomain(story.url)}/144`
-    : '',
+  favicon: story.url ? `https://${extractDomain(story.url)}/favicon.ico` : '',
   domain: extractDomain(story.url),
+  user: story.by,
 });
 
 const loadComments = async (storyAPI, stories) => {
@@ -28,12 +27,13 @@ const loadComments = async (storyAPI, stories) => {
   }
 };
 
-export const topStories = async (
-  _,
-  { cursor, pageSize = 15 },
-  { dataSources: { storyAPI } },
-): topNewsReturnType => {
-  const url = `${BASE_URL}/topstories.json`;
+const getStories = async ({
+  cursor,
+  pageSize = 15,
+  storyAPI,
+  type,
+}): topNewsReturnType => {
+  const url = `${BASE_URL}/${type}.json`;
   const { data: items } = await axios.get(url);
   const offset = getOffsetByCursor(items, cursor);
   const ids = items.slice(offset, offset + pageSize);
@@ -50,3 +50,31 @@ export const topStories = async (
     data: formattedStories,
   };
 };
+
+export const topStories = async (
+  _,
+  { cursor, pageSize = 15 },
+  { dataSources: { storyAPI } },
+): topNewsReturnType =>
+  getStories({ cursor, pageSize, storyAPI, type: 'topstories' });
+
+export const askStories = async (
+  _,
+  { cursor, pageSize = 15 },
+  { dataSources: { storyAPI } },
+): topNewsReturnType =>
+  getStories({ cursor, pageSize, storyAPI, type: 'askstories' });
+
+export const showStories = async (
+  _,
+  { cursor, pageSize = 15 },
+  { dataSources: { storyAPI } },
+): topNewsReturnType =>
+  getStories({ cursor, pageSize, storyAPI, type: 'showstories' });
+
+export const jobsStories = async (
+  _,
+  { cursor, pageSize = 15 },
+  { dataSources: { storyAPI } },
+): topNewsReturnType =>
+  getStories({ cursor, pageSize, storyAPI, type: 'jobsstories' });

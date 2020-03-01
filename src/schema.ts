@@ -16,7 +16,7 @@ const typeDefs = gql`
   type Story {
     id: ID!
     type: String!
-    by: String!
+    user: String!
     time: String!
     title: String!
     text: String
@@ -24,18 +24,21 @@ const typeDefs = gql`
     score: Int!
     domain: String
     numberOfComments: Int!
-    logo: String
+    favicon: String
     comments: [Comment!]
   }
 
-  type TopStoriesConnection {
+  type StoriesConnection {
     cursor: Int
     hasMore: Boolean!
     data: [Story]!
   }
 
   type Query {
-    topStories(pageSize: Int, cursor: Int): TopStoriesConnection!
+    topStories(pageSize: Int, cursor: Int): StoriesConnection!
+    askStories(pageSize: Int, cursor: Int): StoriesConnection!
+    showStories(pageSize: Int, cursor: Int): StoriesConnection!
+    jobsStories(pageSize: Int, cursor: Int): StoriesConnection!
   }
 `;
 
