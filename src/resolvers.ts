@@ -30,7 +30,7 @@ const formatComment = ({ comments, ...rest }) =>
       }
     : null;
 
-const flatComments = (comments, res = []) => {
+const flatComments = (comments = [], res = []) => {
   for (let comment of comments) {
     res.push(comment);
     flatComments(comment.comments, res);
