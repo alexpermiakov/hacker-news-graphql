@@ -29,6 +29,7 @@ const formatComment = ({ comments, ...rest }) =>
         text: rest.text || rest.content,
         comments:
           comments && comments.length ? comments.map(formatComment) : [],
+        level: 0,
       }
     : null;
 
@@ -48,7 +49,7 @@ const loadComments = async (storyAPI, stories) => {
   const commentsArray: any[] = await Promise.all(idsPromises);
 
   for (const [index, story] of stories.entries()) {
-    story.comments = commentsArray[index].filter(comment => comment.by);
+    story.comments = commentsArray[index].map(formatComment).filter(Boolean);
   }
 };
 
