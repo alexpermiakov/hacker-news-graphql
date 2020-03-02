@@ -16,7 +16,9 @@ const formatStory = story => ({
   favicon: story.url ? `https://${extractDomain(story.url)}/favicon.ico` : '',
   domain: extractDomain(story.url),
   user: story.by || story.user,
-  comments: flatComments(story.comments.map(formatComment).filter(Boolean)),
+  comments: flatComments(
+    (story.comments || []).map(formatComment).filter(Boolean) || [],
+  ),
 });
 
 const formatComment = ({ comments, ...rest }) =>
@@ -30,7 +32,8 @@ const formatComment = ({ comments, ...rest }) =>
       }
     : null;
 
-const flatComments = (comments = [], res = []) => {
+const flatComments = (comments, res = []) => {
+  comments = comments || [];
   for (let comment of comments) {
     res.push(comment);
     flatComments(comment.comments, res);
