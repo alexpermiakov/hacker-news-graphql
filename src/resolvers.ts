@@ -49,7 +49,9 @@ const loadComments = async (storyAPI, stories) => {
   const commentsArray: any[] = await Promise.all(idsPromises);
 
   for (const [index, story] of stories.entries()) {
-    story.comments = commentsArray[index].map(formatComment).filter(Boolean);
+    story.comments = (commentsArray[index] || [])
+      .map(formatComment)
+      .filter(Boolean);
   }
 };
 
