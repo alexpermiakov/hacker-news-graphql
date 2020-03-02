@@ -36,9 +36,11 @@ const formatComment = ({ comments, ...rest }) =>
 const flatComments = (comments, res = []) => {
   comments = comments || [];
   for (let comment of comments) {
-    res.push(comment);
-    flatComments(comment.comments, res);
-    delete comment.comments;
+    if (comment) {
+      res.push(comment);
+      flatComments(comment.comments, res);
+      delete comment.comments;
+    }
   }
   return res;
 };
