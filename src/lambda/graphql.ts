@@ -3,7 +3,13 @@ import { ApolloServer } from 'apollo-server-lambda';
 import GraphQLJSON from 'graphql-type-json';
 import { Context, Callback, APIGatewayProxyEvent } from 'aws-lambda';
 import typeDefs from '../schema';
-import { topStories, askStories, showStories, jobsStories } from '../resolvers';
+import {
+  topStories,
+  askStories,
+  showStories,
+  jobsStories,
+  story,
+} from '../resolvers';
 import StoryAPI from '../dataSources/StoryAPI';
 
 const resolvers = {
@@ -12,6 +18,7 @@ const resolvers = {
     askStories,
     showStories,
     jobsStories,
+    story,
   },
   JSON: GraphQLJSON,
 };
