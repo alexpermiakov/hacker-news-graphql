@@ -10,7 +10,6 @@ const typeDefs = gql`
     time: String!
     text: String!
     parent: ID!
-    comments: [Comment!]
     level: Int!
   }
 

@@ -16,7 +16,7 @@ const formatStory = story => ({
   favicon: story.url ? `https://${extractDomain(story.url)}/favicon.ico` : '',
   domain: extractDomain(story.url),
   user: story.by || story.user,
-  comments: story.comments.map(formatComment).filter(Boolean),
+  comments: flatComments(story.comments.map(formatComment).filter(Boolean)),
 });
 
 const formatComment = ({ comments, ...rest }) =>
@@ -29,6 +29,15 @@ const formatComment = ({ comments, ...rest }) =>
           comments && comments.length ? comments.map(formatComment) : [],
       }
     : null;
+
+const flatComments = (comments, res = []) => {
+  for (let comment of comments) {
+    res.push(comment);
+    flatComments(comment.comments, res);
+    delete comment.comments;
+  }
+  return res;
+};
 
 const loadComments = async (storyAPI, stories) => {
   const idsArray = stories.map(story => (story.kids || []).slice(0, 5));
@@ -99,7 +108,6 @@ export const story = async (
 ): Promise<any> => {
   const url = `https://api.hnpwa.com/v0/item/${id}.json`;
   const { data } = await axios.get(url);
-  console.log('data', data);
 
   return {
     cursor: null,
