@@ -16,19 +16,18 @@ const formatStory = story => ({
   favicon: story.url ? `https://${extractDomain(story.url)}/favicon.ico` : '',
   domain: extractDomain(story.url),
   user: story.by || story.user,
-  comments: flatComments(
-    (story.comments || []).map(formatComment).filter(Boolean) || [],
-  ),
+  comments: formatComments(flatComments(story.comments)),
 });
 
-const formatComment = ({ comments, ...rest }) =>
-  rest.user || rest.by
+const formatComments = comments =>
+  (comments || []).map(formatComment).filter(Boolean);
+
+const formatComment = comment =>
+  comment && (comment.user || comment.by)
     ? {
-        ...rest,
-        user: rest.user || rest.by,
-        text: rest.text || rest.content,
-        comments:
-          comments && comments.length ? comments.map(formatComment) : [],
+        ...comment,
+        user: comment.user || comment.by,
+        text: comment.text || comment.content,
         level: 0,
       }
     : null;
@@ -36,11 +35,9 @@ const formatComment = ({ comments, ...rest }) =>
 const flatComments = (comments, res = []) => {
   comments = comments || [];
   for (let comment of comments) {
-    if (comment) {
-      res.push(comment);
-      flatComments(comment.comments, res);
-      delete comment.comments;
-    }
+    res.push(comment);
+    flatComments(comment.comments, res);
+    delete comment.comments;
   }
   return res;
 };
@@ -51,9 +48,7 @@ const loadComments = async (storyAPI, stories) => {
   const commentsArray: any[] = await Promise.all(idsPromises);
 
   for (const [index, story] of stories.entries()) {
-    story.comments = (commentsArray[index] || [])
-      .map(formatComment)
-      .filter(Boolean);
+    story.comments = formatComments(commentsArray[index]);
   }
 };
 
@@ -102,12 +97,12 @@ export const showStories = async (
 ): storiesReturnType =>
   getStories({ cursor, pageSize, storyAPI, type: 'showstories' });
 
-export const jobsStories = async (
+export const jobStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
 ): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'jobsstories' });
+  getStories({ cursor, pageSize, storyAPI, type: 'jobstories' });
 
 export const story = async (
   _,

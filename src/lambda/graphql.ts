@@ -7,7 +7,7 @@ import {
   topStories,
   askStories,
   showStories,
-  jobsStories,
+  jobStories,
   story,
 } from '../resolvers';
 import StoryAPI from '../dataSources/StoryAPI';
@@ -17,7 +17,7 @@ const resolvers = {
     topStories,
     askStories,
     showStories,
-    jobsStories,
+    jobStories,
     story,
   },
   JSON: GraphQLJSON,
