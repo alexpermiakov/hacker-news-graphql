@@ -44,6 +44,7 @@ const typeDefs = gql`
     topStories(pageSize: Int, cursor: Int): StoriesConnection!
     askStories(pageSize: Int, cursor: Int): StoriesConnection!
     showStories(pageSize: Int, cursor: Int): StoriesConnection!
+    bestStories(pageSize: Int, cursor: Int): StoriesConnection!
     jobStories(pageSize: Int, cursor: Int): StoriesConnection!
     story(id: ID!, pageSize: Int, cursor: Int): StoryConnection!
   }

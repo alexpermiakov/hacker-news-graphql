@@ -97,6 +97,13 @@ export const showStories = async (
 ): storiesReturnType =>
   getStories({ cursor, pageSize, storyAPI, type: 'showstories' });
 
+export const bestStories = async (
+  _,
+  { cursor, pageSize = 15 },
+  { dataSources: { storyAPI } },
+): storiesReturnType =>
+  getStories({ cursor, pageSize, storyAPI, type: 'beststories' });
+
 export const jobStories = async (
   _,
   { cursor, pageSize = 15 },
