@@ -19,6 +19,6 @@ export const getOffsetByCursor = (items: number[], cursor?: number) =>
 
 export const extractDomain = (url = '') => {
   let domain = url.includes('//') ? url.split('//')[1] : url;
-  domain = domain.includes('www') ? domain.split('www')[1] : domain;
+  domain = domain.includes('www.') ? domain.split('www')[1] : domain;
   return domain.split('/')[0];
 };
