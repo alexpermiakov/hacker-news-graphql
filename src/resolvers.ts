@@ -13,7 +13,9 @@ const formatStory = story => ({
   score: story.score || story.points,
   time: getPublishedDate(story.time),
   numberOfComments: (story.kids || story.comments || []).length,
-  favicon: story.url ? `https://${extractDomain(story.url)}/favicon.ico` : '',
+  favicon: story.url
+    ? `https://favicongrabber.com/api/grab/${extractDomain(story.url)}`
+    : '',
   domain: extractDomain(story.url),
   user: story.by || story.user,
   comments: formatComments(flatComments(story.comments)),
