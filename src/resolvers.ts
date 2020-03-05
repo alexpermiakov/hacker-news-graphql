@@ -30,15 +30,17 @@ const formatComment = comment =>
         ...comment,
         user: comment.user || comment.by,
         text: comment.text || comment.content,
-        level: 0,
       }
     : null;
 
-const flatComments = (comments, res = []) => {
+const flatComments = (comments, res = [], level = 0) => {
   comments = comments || [];
   for (let comment of comments) {
-    res.push(comment);
-    flatComments(comment.comments, res);
+    res.push({
+      ...comment,
+      level: level + 1,
+    });
+    flatComments(comment.comments, res, level + 1);
     delete comment.comments;
   }
   return res;
