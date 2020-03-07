@@ -61,12 +61,19 @@ const loadComments = async (storyAPI, stories) => {
   }
 };
 
-const getStories = async ({
-  cursor,
-  pageSize = 15,
-  storyAPI,
-  type,
-}): storiesReturnType => {
+const getStoriesByIds = async ({ ids, storyAPI }) => {
+  const stories = await storyAPI.getItemsByIds(ids);
+  const formattedStories = stories.map(formatStory);
+  await loadComments(storyAPI, formattedStories);
+
+  return {
+    cursor: null,
+    hasMore: false,
+    data: formattedStories,
+  };
+};
+
+const getStoriesByCursor = async ({ cursor, pageSize, storyAPI, type }) => {
   const url = `${BASE_URL}/${type}.json`;
   const { data: items } = await axios.get(url);
   const offset = getOffsetByCursor(items, cursor);
@@ -89,42 +96,33 @@ export const topStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
-): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'topstories' });
+) => getStoriesByCursor({ cursor, pageSize, storyAPI, type: 'topstories' });
 
 export const askStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
-): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'askstories' });
+) => getStoriesByCursor({ cursor, pageSize, storyAPI, type: 'askstories' });
 
 export const showStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
-): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'showstories' });
+) => getStoriesByCursor({ cursor, pageSize, storyAPI, type: 'showstories' });
 
 export const bestStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
-): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'beststories' });
+) => getStoriesByCursor({ cursor, pageSize, storyAPI, type: 'beststories' });
 
 export const jobStories = async (
   _,
   { cursor, pageSize = 15 },
   { dataSources: { storyAPI } },
-): storiesReturnType =>
-  getStories({ cursor, pageSize, storyAPI, type: 'jobstories' });
+) => getStoriesByCursor({ cursor, pageSize, storyAPI, type: 'jobstories' });
 
-export const story = async (
-  _,
-  { id, cursor, pageSize = 15 },
-  { dataSources: { storyAPI } },
-): Promise<any> => {
+export const story = async (_, { id }): Promise<any> => {
   const url = `https://api.hnpwa.com/v0/item/${id}.json`;
   const { data } = await axios.get(url);
 
@@ -134,3 +132,9 @@ export const story = async (
     data: formatStory(data),
   };
 };
+
+export const stories = async (
+  _,
+  { ids = [] },
+  { dataSources: { storyAPI } },
+): storiesReturnType => getStoriesByIds({ ids, storyAPI });

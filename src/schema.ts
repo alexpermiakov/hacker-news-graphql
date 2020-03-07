@@ -47,6 +47,7 @@ const typeDefs = gql`
     bestStories(pageSize: Int, cursor: Int): StoriesConnection!
     jobStories(pageSize: Int, cursor: Int): StoriesConnection!
     story(id: ID!, pageSize: Int, cursor: Int): StoryConnection!
+    stories(ids: [ID!]): StoriesConnection!
   }
 `;
 
