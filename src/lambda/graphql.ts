@@ -11,6 +11,7 @@ import {
   bestStories,
   story,
   stories,
+  search,
 } from '../resolvers';
 import StoryAPI from '../dataSources/StoryAPI';
 
@@ -23,6 +24,7 @@ const resolvers = {
     bestStories,
     story,
     stories,
+    search,
   },
   JSON: GraphQLJSON,
 };

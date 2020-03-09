@@ -65,12 +65,7 @@ const getStoriesByIds = async ({ ids, storyAPI }) => {
   const stories = await storyAPI.getItemsByIds(ids);
   const formattedStories = stories.map(formatStory);
   await loadComments(storyAPI, formattedStories);
-
-  return {
-    cursor: null,
-    hasMore: false,
-    data: formattedStories,
-  };
+  return formattedStories;
 };
 
 const getStoriesByCursor = async ({ cursor, pageSize, storyAPI, type }) => {
@@ -78,17 +73,32 @@ const getStoriesByCursor = async ({ cursor, pageSize, storyAPI, type }) => {
   const { data: items } = await axios.get(url);
   const offset = getOffsetByCursor(items, cursor);
   const ids = items.slice(offset, offset + pageSize);
-  const stories = await storyAPI.getItemsByIds(ids);
+
+  const stories = await getStoriesByIds({ ids, storyAPI });
   const hasMore = stories.length > 0;
-
-  const formattedStories = stories.map(formatStory);
-
-  await loadComments(storyAPI, formattedStories);
 
   return {
     cursor: hasMore ? stories[stories.length - 1].id : null,
     hasMore,
-    data: formattedStories,
+    data: stories,
+  };
+};
+
+export const search = async (
+  _,
+  { cursor = 0, query },
+  { dataSources: { storyAPI } },
+) => {
+  const url = `https://hn.algolia.com/api/v1/search?tags=story&query=${query}&page=${cursor}`;
+  const { data: items } = await axios.get(url);
+  const ids = items.hits.map(it => it.objectID);
+  const stories = await getStoriesByIds({ ids, storyAPI });
+  const hasMore = stories.length > 0;
+
+  return {
+    cursor: hasMore ? stories[stories.length - 1].id : null,
+    hasMore,
+    data: stories,
   };
 };
 
@@ -137,4 +147,8 @@ export const stories = async (
   _,
   { ids = [] },
   { dataSources: { storyAPI } },
-): storiesReturnType => getStoriesByIds({ ids, storyAPI });
+) => ({
+  cursor: null,
+  hasMore: false,
+  data: await getStoriesByIds({ ids, storyAPI }),
+});
