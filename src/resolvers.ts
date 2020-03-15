@@ -96,7 +96,7 @@ export const search = async (
   const hasMore = stories.length > 0;
 
   return {
-    cursor: hasMore ? stories[stories.length - 1].id : null,
+    cursor: cursor + 1,
     hasMore,
     data: stories,
   };
