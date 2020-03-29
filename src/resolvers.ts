@@ -2,12 +2,6 @@ import axios from 'axios';
 import { getPublishedDate, getOffsetByCursor, extractDomain } from './utils';
 import { BASE_URL } from './dataSources/StoryAPI';
 
-type storiesReturnType = Promise<{
-  data: any[];
-  hasMore: boolean;
-  cursor: number;
-}>;
-
 const formatStory = story => ({
   ...story,
   score: story.score || story.points,

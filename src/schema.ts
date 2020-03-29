@@ -16,12 +16,12 @@ const typeDefs = gql`
   type Story {
     id: ID!
     type: String!
-    user: String!
+    user: String
     time: String!
     title: String!
     text: String
     url: String
-    score: Int!
+    score: Int
     domain: String
     numberOfComments: Int!
     favicon: String
